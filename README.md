@@ -9,7 +9,9 @@ temperature sensors, two pumps, and two relays.
 2. Build jar
 3. `rsync` jar
 4. Run jar
-5. Port forward nginx and restart
+5. Port forward nginx (once)
+6. Restart nginx (every time after jar runs)
+7. Verify
 
 ### 1. Environment
 

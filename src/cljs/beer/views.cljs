@@ -7,12 +7,14 @@
   (let [t1 (re-frame/subscribe [:temp-one])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :child [:p (str @t1 "\u00B0")]])))
 
 (defn temperature-two []
   (let [t2 (re-frame/subscribe [:temp-two])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :child [:p (str @t2 "\u00B0")]])))
 
 ;; Target temperatures 1 and 2
@@ -20,6 +22,7 @@
   (let [t1 (re-frame/subscribe [:target-one])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :child [re-com/input-text
                :model @t1
                :change-on-blur? true
@@ -29,6 +32,7 @@
   (let [t2 (re-frame/subscribe [:target-two])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :child [re-com/input-text
                :model @t2
                :change-on-blur? true
@@ -40,6 +44,7 @@
     (fn []
       [re-com/box
        :class (:class @p1)
+       :size "1 1 50vw"
        :attr {:on-click #(re-frame/dispatch [:toggle-relay :pump-1])}
        :child [:p "Pump One"]])))
 
@@ -47,6 +52,7 @@
   (let [p2 (re-frame/subscribe [:pump-two])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :class (:class @p2)
        :attr {:on-click #(re-frame/dispatch [:toggle-relay :pump-2])}
        :child [:p "Pump Two"]])))
@@ -57,6 +63,7 @@
     (fn []
       [re-com/box
        :class (:class @s1)
+       :size "1 1 50vw"
        :attr {:on-click #(re-frame/dispatch [:toggle-relay :solenoid-1])}
        :child [:p "Solenoid One"]])))
 
@@ -64,6 +71,7 @@
   (let [s2 (re-frame/subscribe [:pump-two])]
     (fn []
       [re-com/box
+       :size "1 1 50vw"
        :class (:class @s2)
        :attr {:on-click #(re-frame/dispatch [:toggle-relay :pump-2])}
        :child [:p "Solenoid Two"]])))
@@ -73,12 +81,20 @@
   (fn []
     [re-com/v-box
      :height "100%"
+     :size "1 0 auto"
      :children [[re-com/h-box
+                 :size "1 0 auto"
                  :children [[temperature-one]
                             [temperature-two]]]
                 [re-com/h-box
+                 :size "1 0 auto"
                  :children [[target-one]
                             [target-two]]]
                 [re-com/h-box
+                 :size "1 0 auto"
                  :children [[pump-one]
-                            [pump-two]]]]]))
+                            [pump-two]]]
+                [re-com/h-box
+                 :size "1 0 auto"
+                 :children [[solenoid-one]
+                            [solenoid-two]]]]]))
