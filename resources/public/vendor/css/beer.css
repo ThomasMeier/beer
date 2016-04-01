@@ -1,0 +1,7 @@
+.running {
+	background: red;
+}
+
+.not-running {
+	background: green;
+}
