@@ -23,7 +23,7 @@
    "%.2f"
    (+ 32
       (* 1.8
-         (* 0.001 (Integer. (Trim c)))))))
+         (* 0.001 (Integer. (cstr/trim c)))))))
 
 (defn get-temp-1 []
   (c->f
