@@ -1,7 +1,41 @@
+body {
+	color: #fff;
+	background: #F5F4F2; /*#132041;*/
+	overflow-y:hidden;
+	font-family: 'Roboto Condensed';
+	font-weight: 300;
+
+}
+
+p {
+	margin: 0 auto;
+}
+
+.temp-box {
+	margin: 0 auto;
+	font-size: 5em;
+	color: #716B6B;
+}
+
 .running {
-	background: red;
+	background: rgb(197, 91, 91);
+	color:#fff;
 }
 
 .not-running {
-	background: green;
+	background: #697988;
+	color:#fff;
+}
+
+.running, .not-running {
+	color:#fff !important;
+	text-align:center;
+	font-size: 5em;
+}
+
+.form-control {
+	border-radius: 0px !important;
+	border: 0px transparent solid;
+	text-align: center;
+	font-size:1.5em;
 }
