@@ -115,4 +115,5 @@
                  :size "1 1 auto"
                  :height "34vh"
                  :children [[solenoid-one]
+
                             [solenoid-two]]]]]))
