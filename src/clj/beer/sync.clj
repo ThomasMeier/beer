@@ -59,7 +59,7 @@
 ;; Schedule
 (defn job []
   (swap! app-state assoc :temp-1 (get-temp-1))
-  (swap! app-sttate assoc :temp-2 (get-temp-2)))
+  (swap! app-state assoc :temp-2 (get-temp-2)))
 
 (schedule job
           (-> (in 1 :second)
