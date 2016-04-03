@@ -24,12 +24,13 @@
   ;;:clean-targets ^{:protect false} ["resources/public/js/compiled" "target"]
 
   :figwheel {:css-dirs ["resources/public/css"]
-             :ring-handler beer.handler/handler}
+             :ring-handler beer.handler/app}
 
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs"]
                         :figwheel {:on-jsload "beer.core/mount-root"
-                                   :css-dirs ["resources/public/vendor/css"]}
+                                   :css-dirs ["resources/public/vendor/css"]
+                                   :ring-handler beer.handler/app}
                         :compiler {:main beer.core
                                    :output-to "resources/public/js/compiled/app.js"
                                    :output-dir "resources/public/js/compiled/out"

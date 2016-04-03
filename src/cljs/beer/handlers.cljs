@@ -35,8 +35,10 @@
 (re-frame/register-handler
  :do-sync
  (fn [db [_ resp]]
-   (.log js/console (str (js->clj resp)))
-   (js->clj resp)))
+   (.log js/console (str "YO: " (js->clj (JSON/parse resp) :keywordize-keys true)))
+   (js->clj
+    (JSON/parse resp)
+    :keywordize-keys true)))
 
 (re-frame/register-handler
  :sync-db
