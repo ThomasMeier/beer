@@ -4,8 +4,8 @@
            [clojure.string :as cstr]))
 
 (def app-state
-  (atom {:temp-1 "72"
-         :temp-2 "72"
+  (atom {:temp-1 "82"
+         :temp-2 "71"
          :target-1 "212"
          :target-2 "212"
          :solenoid-1 {:class "not-running"

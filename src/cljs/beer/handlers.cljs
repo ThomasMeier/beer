@@ -35,6 +35,7 @@
 (re-frame/register-handler
  :do-sync
  (fn [db [_ resp]]
+   (.log js/console (str (js->clj resp)))
    (js->clj resp)))
 
 (re-frame/register-handler
@@ -42,4 +43,7 @@
  (fn [db _]
    (GET "/sync"
         {:handler #(re-frame/dispatch [:do-sync %1])
-         :error #(println (str "[SYNC FAILURE] " %1))})))
+         :error #(.log js/console (str "[SYNC FAILURE] " %1))})
+   db))
+
+(js/setInterval #(re-frame/dispatch [:sync-db]) 3000)
