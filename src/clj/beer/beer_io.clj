@@ -35,4 +35,9 @@
 ;; Report actual states of relays
 (defn read-relay
   [which-relay]
-  (read-value (which-relay @relay-map)))
+  (let [power (read-value (which-relay @relay-map))]
+    (if (= :low power)
+      {:running? true
+       :class "running"}
+      {:running? false
+       :class "not-running"})))

@@ -1,7 +1,8 @@
 (ns beer.sync
   (require [immutant.scheduling :refer :all]
            [cheshire.core :as cheshire]
-           [clojure.string :as cstr]))
+           [clojure.string :as cstr]
+           [beer.beer-io :as beer-io]))
 
 (def app-state
   (atom {:temp-1 "82"
@@ -58,7 +59,9 @@
 ;; Schedule
 (defn job []
   (swap! app-state assoc :temp-1 (get-temp-1))
-  (swap! app-state assoc :temp-2 (get-temp-2)))
+  (swap! app-state assoc :temp-2 (get-temp-2))
+  (doseq [relay [:pump-1 :pump-2 :solenoid-1 :solenoid-2]]
+    (swap! app-state assoc relay (beer-io/read-relay relay))))
 
 (schedule job
           (-> (in 1 :second)
