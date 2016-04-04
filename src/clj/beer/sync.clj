@@ -17,7 +17,7 @@
          :pump-2 {:class "running"
                   :running? true}}))
 
-;; TEMP SENSORS
+;; Temperature sensors
 (defn c->f [c]
   (format
    "%.2f"
@@ -41,20 +41,19 @@
       (System/getenv "TEMP_2"))
      #"="))))
 
+;; Update relay from beer io
+(defn set-relay
+  [which-relay state]
+  (swap! app-state assoc which-relay state))
 
-;; TEMP TARGETS
-(defn set-temp-target-1 [])
+;; Temperature targets
+(defn set-temp-target-1
+  [temperature]
+  (swap! app-state assoc :target-1 temperature))
 
-(defn set-temp-target-2 [])
-
-;; RELAY
-(defn solenoid-1 [])
-
-(defn solenoid-2 [])
-
-(defn pump-1 [])
-
-(defn pump-2 [])
+(defn set-temp-target-2
+  [temperature]
+  (swap! app-state assoc :target-2 temperature))
 
 ;; Schedule
 (defn job []
