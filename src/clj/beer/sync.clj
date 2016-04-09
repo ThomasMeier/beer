@@ -18,6 +18,9 @@
          :pump-2 {:class "running"
                   :running? true}}))
 
+(def target-1 (atom false))
+(def target-2 (atom false))
+
 ;; Temperature sensors
 (defn c->f [c]
   (format
@@ -50,10 +53,12 @@
 ;; Temperature targets
 (defn set-temp-target-1
   [temperature]
+  (reset! target-1 true)
   (swap! app-state assoc :target-1 temperature))
 
 (defn set-temp-target-2
   [temperature]
+  (reset! target-2 true)
   (swap! app-state assoc :target-2 temperature))
 
 (defn toggle-relay
@@ -61,12 +66,26 @@
   (swap! app-state assoc which-relay
          (beer-io/toggle which-relay @app-state)))
 
+;; Relay logic
+(defn relay-logic
+  [which-relay which-target which-temp]
+  (let [relay-state (-> @app-state which-relay :running?)
+        target (-> @app-state which-target )
+        temp (-> @app-state which-temp)
+        temp-neighborhood [(- temp 1)
+                           (+ temp 1)]]
+    (cond
+      (> temp (first temp-neighborhood)) true
+      (> temp (second temp-neighborhood)) true)))
+
 ;; Schedule
 (defn job []
   (swap! app-state assoc :temp-1 (get-temp-1))
   (swap! app-state assoc :temp-2 (get-temp-2))
+  (when @target-1 (relay-logic :solenoid-1 :target-1 :temp-1))
+  (when @target-2 (relay-logic :solenoid-2 :target-2 :temp-2))
   (doseq [relay [:pump-1 :pump-2 :solenoid-1 :solenoid-2]]
-    (swap! app-state assoc relay (read-relay relay))))
+    (swap! app-state assoc relay (beer-io/read-relay relay))))
 
 (schedule job
           (-> (in 1 :second)
