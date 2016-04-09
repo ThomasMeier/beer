@@ -5,6 +5,7 @@
                  [re-frame "0.7.0"]
                  [re-com "0.8.0"]
                  [compojure "1.5.0"]
+                 [clj-gpio "0.2.0"]
                  [ring "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [org.immutant/scheduling "2.1.3"]

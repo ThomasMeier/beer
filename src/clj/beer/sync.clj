@@ -56,12 +56,17 @@
   [temperature]
   (swap! app-state assoc :target-2 temperature))
 
+(defn toggle-relay
+  [which-relay]
+  (swap! app-state assoc which-relay
+         (beer-io/toggle which-relay @app-state)))
+
 ;; Schedule
 (defn job []
   (swap! app-state assoc :temp-1 (get-temp-1))
   (swap! app-state assoc :temp-2 (get-temp-2))
   (doseq [relay [:pump-1 :pump-2 :solenoid-1 :solenoid-2]]
-    (swap! app-state assoc relay (beer-io/read-relay relay))))
+    (swap! app-state assoc relay (read-relay relay))))
 
 (schedule job
           (-> (in 1 :second)

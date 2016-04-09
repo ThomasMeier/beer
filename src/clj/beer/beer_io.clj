@@ -1,14 +1,17 @@
 (ns beer.beer-io
-  (require [beer.sync :as sync]
-           [gpio.core :refer :all]))
+  (require [gpio.core :refer :all]))
+
+;; TODO: If a button is pressed, auto is switched off until
+;; pressed again.
+(def auto? (atom true))
 
 (def relay-map
-  {:pump-1 (open-port 2)
-   :pump-2 (open-port 3)
-   :solenoid-1 (open-port 4)
-   :solenoid-2 (open-port 17)})
+  {:pump-1 (open-port 21)
+   :pump-2 (open-port 20)
+   :solenoid-1 (open-port 16)
+   :solenoid-2 (open-port 12)})
 
-(doseq [port (values relay-map)]
+(doseq [port (vals relay-map)]
   (set-direction! port :out)
   (write-value! port :high))
 
@@ -17,22 +20,20 @@
   (write-value!
    (which-relay relay-map)
    (if (= :on state) :high :low))
-  (sync/set-relay
-   which-relay
-   (if (= :on state)
-     {:class "running"
-      :running? true}
-     {:class "not-running"
-      :running? false})))
+  (if (= :on state)
+    {:class "running"
+     :running? true}
+    {:class "not-running"
+     :running? false}))
 
 ;; Relay toggles
 (defn toggle
-  [which-relay]
-  (if (-> sync/app-state deref which-relay :running?)
-    (switch which-relay :off)
-    (switch which-relay :on)))
+  [which-relay app-state]
+  (switch
+   which-relay
+   (if (-> app-state which-relay :running?) :off :on)))
 
-;; Report actual states of relays
+;; Factual state of relays
 (defn read-relay
   [which-relay]
   (let [power (read-value (which-relay @relay-map))]
