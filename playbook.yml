@@ -1,0 +1,30 @@
+---
+- hosts: pi
+  remote_user: pi
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Try to authorize ssh key
+      authorized_key: user=pi key="{{ lookup ('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: Ensure java installed
+      apt: name=default-jdk state=present
+
+    - name: Ensure nginx installed
+      apt: name=nginx state=present
+
+    - name: Create beer jar
+      delegate_to: 127.0.0.1
+      raw: lein ring uberjar
+
+    - name: Copy over beer jar
+      copy: src=./target/*standalone.jar dest=~/beer.jar mode=a+x
+
+    - name: Transfer simple startup script
+      copy: src=./resources/startbeer.sh dest=~/startbeer.sh mode=a+x
+
+    - name: Make sure start up script added to rc.local
+      lineinfile: dest=/etc/rc.local line="sudo /home/pi/startbeer.sh &\n" insertbefore="exit 0"
+
+    - name: Start beer jar with start up script
+      raw: /home/pi/startbeer.sh &
