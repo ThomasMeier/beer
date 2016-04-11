@@ -1,2 +1,0 @@
-(require '[falcon.core :as f])
-exit
