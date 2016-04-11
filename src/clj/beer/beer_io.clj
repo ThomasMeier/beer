@@ -1,9 +1,13 @@
 (ns beer.beer-io
-  (require [gpio.core :refer :all]))
+  (require [gpio.core :refer :all]
+           [clojure.java.shell :as shell]))
 
 ;; TODO: If a button is pressed, auto is switched off until
 ;; pressed again.
 (def auto? (atom true))
+
+(doseq [pin ["21" "20" "16" "12"]]
+  (spit "/sys/class/gpio/unexport" pin))
 
 (def relay-map
   {:pump-1 (open-port 21)
@@ -12,8 +16,8 @@
    :solenoid-2 (open-port 12)})
 
 (doseq [port (vals relay-map)]
-  (set-direction! port :out)
-  (write-value! port :high))
+  (write-value! port :high)
+  (set-direction! port :out))
 
 (defn switch
   [which-relay state]
@@ -36,7 +40,7 @@
 ;; Factual state of relays
 (defn read-relay
   [which-relay]
-  (let [power (read-value (which-relay @relay-map))]
+  (let [power (read-value (which-relay relay-map))]
     (if (= :low power)
       {:running? true
        :class "running"}
