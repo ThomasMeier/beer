@@ -6,7 +6,7 @@
 ;; pressed again.
 (def auto? (atom true))
 
-(doseq [pin ["21" "20" "16" "12"]]
+#_(doseq [pin ["21" "20" "16" "12"]]
   (spit "/sys/class/gpio/unexport" pin))
 
 (def relay-map
