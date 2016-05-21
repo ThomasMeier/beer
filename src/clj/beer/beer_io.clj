@@ -6,7 +6,7 @@
 ;; pressed again.
 (def auto? (atom true))
 
-#_(doseq [pin ["21" "20" "16" "12"]]
+(doseq [pin ["21" "20" "16" "12"]]
   (spit "/sys/class/gpio/unexport" pin))
 
 (def relay-map
@@ -16,8 +16,8 @@
    :solenoid-2 (open-port 12)})
 
 (doseq [port (vals relay-map)]
-  (write-value! port :high)
-  (set-direction! port :out))
+  (set-direction! port :out)
+  (write-value! port :high))
 
 (defn switch
   [which-relay state]
