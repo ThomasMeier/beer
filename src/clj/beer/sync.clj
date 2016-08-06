@@ -63,6 +63,7 @@
 
 (defn toggle-relay
   [which-relay]
+  (println (str which-relay))
   (swap! app-state assoc which-relay
          (beer-io/toggle which-relay @app-state)))
 
@@ -89,7 +90,7 @@
 
 (schedule job
           (-> (in 1 :second)
-              (every 2 :seconds)))
+              (every 1 :seconds)))
 
 ;; Current state
 (defn current-state []

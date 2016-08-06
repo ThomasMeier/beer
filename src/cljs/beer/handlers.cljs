@@ -35,9 +35,8 @@
 (re-frame/register-handler
  :do-sync
  (fn [db [_ resp]]
-   (.log js/console (str "YO: " (js->clj (JSON/parse resp) :keywordize-keys true)))
    (js->clj
-    (JSON/parse resp)
+    (.parse js/JSON resp)
     :keywordize-keys true)))
 
 (re-frame/register-handler
@@ -48,4 +47,4 @@
          :error #(.log js/console (str "[SYNC FAILURE] " %1))})
    db))
 
-(js/setInterval #(re-frame/dispatch [:sync-db]) 3000)
+(js/setInterval #(re-frame/dispatch [:sync-db]) 1000)
