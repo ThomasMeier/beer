@@ -4,12 +4,12 @@
 
 ;; TODO: If a button is pressed, auto is switched off until
 ;; pressed again.
-(def auto? (atom true))
-(def solenoid-auto-1 (atom false))
-(def solenoid-auto-2 (atom false))
-
-#_(doseq [pin ["21" "20" "16" "12"]]
-  (spit "/sys/class/gpio/unexport" pin))
+(def auto?
+  (atom
+   {:solenoid-1-enabled true
+    :solenoid-2-enabled true
+    :solenoid-1-running-target false
+    :solenoid-2-running-target false}))
 
 (def relay-map
   {:pump-1 (open-port 21)
@@ -20,6 +20,13 @@
 (doseq [port (vals relay-map)]
   (set-direction! port :out)
   (write-value! port :high))
+
+(defn relay-on-auto?
+  "If relay is on auto, then target temps are being used. If button is used,
+  then auto is switched off on that relay. When auto is on, this program tries
+  to keep within a limit of the temperature."
+  [which-relay]
+  ())
 
 (defn switch
   [which-relay state]

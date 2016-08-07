@@ -3,6 +3,8 @@
               [beer.db :as db]
               [ajax.core :refer [GET]]))
 
+(set! js/sentState false)
+
 (re-frame/register-handler
  :initialize-db
  (fn  [_ _]
@@ -13,12 +15,14 @@
  :set-target-1
  (fn [db [_ target-temp]]
    (GET (str "/set-target-1/" target-temp))
+   (set! js/sentState true)
    (assoc db :target-1 target-temp)))
 
 (re-frame/register-handler
  :set-target-2
  (fn [db [_ target-temp]]
    (GET (str "/set-target-2/" target-temp))
+   (set! js/sentState true)
    (assoc db :target-2 target-temp)))
 
 ;; Start/Stop Relays
@@ -27,6 +31,7 @@
  :toggle-relay
  (fn [db [_ relay-key]]
    (GET (str "/toggle-relay/" (name relay-key)))
+   (set! js/sentState true)
    (if-let [running? (:running? (relay-key db))]
      (assoc db relay-key {:running? false :class "not-running"})
      (assoc db relay-key {:running? true :class "running"}))))
@@ -45,6 +50,9 @@
    (GET "/sync"
         {:handler #(re-frame/dispatch [:do-sync %1])
          :error #(.log js/console (str "[SYNC FAILURE] " %1))})
+   (set! js/sentState true)
    db))
 
-(js/setInterval #(re-frame/dispatch [:sync-db]) 1000)
+(js/setInterval #(if js/sentState
+                   (set! js/sentState false)
+                   (re-frame/dispatch [:sync-db])) 1100)

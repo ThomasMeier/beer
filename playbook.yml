@@ -7,21 +7,42 @@
     - name: Try to authorize ssh key
       authorized_key: user=pi key="{{ lookup ('file', '~/.ssh/id_rsa.pub') }}"
 
+    - name: Update apt-get repos
+      apt: update_cache=yes
+
     - name: Ensure java installed
       apt: name=default-jdk state=present
 
     - name: Ensure nginx installed
       apt: name=nginx state=present
 
+    - name: Update cljsbuild
+      become: false
+      local_action: command lein cljsbuild once min
+
     - name: Create beer jar
-      delegate_to: 127.0.0.1
-      raw: lein ring uberjar
+      become: false
+      local_action: command lein ring uberjar
 
     - name: Copy over beer jar
-      copy: src=./target/*standalone.jar dest=~/beer.jar mode=a+x
+      become: false
+      copy: src=./target/beer-0.1.0-SNAPSHOT-standalone.jar dest=~/beer.jar mode=a+x owner=pi
+
+    - name: Copy over nginx default
+      copy: src=./resources/default dest=/etc/nginx/sites-available/default mode=a+x owner=pi
 
     - name: Transfer simple startup script
-      copy: src=./resources/startbeer.sh dest=~/startbeer.sh mode=a+x
+      become: false
+      copy: src=./resources/startbeer.sh dest=~/startbeer.sh mode=a+x owner=pi
+
+    - name: Add command to /boot/config.txt
+      lineinfile: dest=/boot/config.txt line="\ndtoverlay=w1-gpio,gpiopin=4"
+
+    - name: Enable gpio
+      raw:  modprobe w1-gpio
+
+    - name: Enable therm
+      raw: modprobe  w1-therm
 
     - name: Make sure start up script added to rc.local
       lineinfile: dest=/etc/rc.local line="sudo /home/pi/startbeer.sh &\n" insertbefore="exit 0"

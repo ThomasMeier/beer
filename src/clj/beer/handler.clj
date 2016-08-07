@@ -6,6 +6,8 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [clojure.java.shell :as shell]))
 
+(println "Starting!")
+
 ;; Set up GPIO
 (shell/sh "sudo" "modprobe" "w1-gpio")
 (shell/sh "sudo" "modprobe" "w1-therm")
@@ -22,3 +24,7 @@
 
 (def app
   (wrap-defaults app-routes site-defaults))
+
+(println "Restarting nginx")
+(shell/sh "sudo" "service" "nginx" "restart")
+(println "Started!")

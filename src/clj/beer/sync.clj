@@ -30,12 +30,16 @@
          (* 0.001 (Integer. (cstr/trim c)))))))
 
 (defn get-temp-1 []
-  (c->f
-   (last
-    (cstr/split
-     (slurp
-      (System/getenv "TEMP_1"))
-     #"="))))
+  (try
+    (c->f
+     (last
+      (cstr/split
+       (slurp
+        (System/getenv "TEMP_1"))
+       #"=")))
+    (catch Exception e
+      (println (str "Failure to read temp. Check env var. TEMP_1: "
+                    (System/getenv "TEMP_1"))))))
 
 (defn get-temp-2 []
   (c->f
@@ -53,12 +57,16 @@
 ;; Temperature targets
 (defn set-temp-target-1
   [temperature]
-  (reset! target-1 true)
+  (if (= temperature "212")
+    (reset! target-1 false)
+    (reset! target-1 true))
   (swap! app-state assoc :target-1 temperature))
 
 (defn set-temp-target-2
   [temperature]
-  (reset! target-2 true)
+  (if (= temperature "212")
+    (reset! target-2 false)
+    (reset! target-2 true))
   (swap! app-state assoc :target-2 temperature))
 
 (defn toggle-relay
