@@ -3,6 +3,8 @@
 A Clojure application designed to work with a Raspberry Pi. It expects two
 temperature sensors, two pumps, and two relays.
 
+![alt text](https://github.com/ThomasMeier/beer/blob/master/doc/beerui.png "Beer UI")
+
 ## Installation on the Pi
 
 1. Clone this project to your computer `git clone git@github.com:ThomasMeier/beer.git`
